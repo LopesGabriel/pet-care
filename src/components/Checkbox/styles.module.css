@@ -1,0 +1,15 @@
+.checkbox-wrapper {
+  align-items: center;
+  display: flex;
+  padding: 6px 8px;
+}
+
+.checkbox-wrapper input {
+  cursor: pointer;
+}
+
+.checkbox-wrapper label {
+  color: #ccc;
+  cursor: pointer;
+  padding-left: 0.5rem;
+}

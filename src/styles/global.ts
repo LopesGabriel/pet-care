@@ -20,12 +20,14 @@ export const GlobalStyle = createGlobalStyle`
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  color: ${(props) => props.theme.white};
  }
 
  h1, h2, h3, h4 {
   font-family: 'Roboto Mono', monospace;
   font-weight: 700;
   font-size: 1.25;
+  color: ${(props) => props.theme.white};
  }
 
  input {
