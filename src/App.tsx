@@ -1,5 +1,6 @@
 import { ThemeProvider } from 'styled-components'
 import { Button } from './components/Button'
+import { TextInput } from './components/TextInput'
 import { GlobalStyle } from './styles/global'
 import { defaultTheme } from './styles/themes/default'
 
@@ -21,9 +22,10 @@ function App() {
       >
         Inputs
       </h2>
-      <div
-        style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}
-      ></div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+        <TextInput variant="primary" />
+        <TextInput variant="secondary" />
+      </div>
 
       <GlobalStyle />
     </ThemeProvider>

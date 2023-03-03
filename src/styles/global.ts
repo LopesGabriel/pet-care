@@ -27,4 +27,11 @@ export const GlobalStyle = createGlobalStyle`
   font-weight: 700;
   font-size: 1.25;
  }
+
+ input {
+  border-radius: 4px;
+  padding: 6px 10px;
+  border: none;
+  font-weight: 500;
+ }
 `

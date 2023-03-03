@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export type ButtonVariant = 'primary' | 'secondary'
 
 interface ButtonContainerProps {
-  variant: 'primary' | 'secondary'
+  variant: ButtonVariant
 }
 
 export const ButtonContainer = styled.button<ButtonContainerProps>`
@@ -16,7 +16,7 @@ export const ButtonContainer = styled.button<ButtonContainerProps>`
       ? `color: ${props.theme['black-400']};`
       : `color: ${props.theme.white};`}
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border: none;
   font-weight: 500;
   /* font-weight: 600; */
