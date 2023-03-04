@@ -6,7 +6,9 @@ export function Header() {
     <HeaderContainer>
       <h2>Indy Pet Care</h2>
       <NavContainer>
-        <NavLink to="/">Serviços</NavLink>
+        <NavLink to="/" title="Serviços">
+          Serviços
+        </NavLink>
       </NavContainer>
     </HeaderContainer>
   )

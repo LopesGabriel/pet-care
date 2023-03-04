@@ -1,4 +1,4 @@
-import styles from './styles.module.css'
+import { CheckboxContainer } from './styles'
 import { v4 } from 'uuid'
 
 interface CheckboxProps {
@@ -9,9 +9,9 @@ interface CheckboxProps {
 export function Checkbox({ value, text }: CheckboxProps) {
   const checkboxId = `${value}_${v4()}`
   return (
-    <div className={styles['checkbox-wrapper']}>
+    <CheckboxContainer>
       <input id={checkboxId} type={'checkbox'} />
       <label htmlFor={checkboxId}>{text}</label>
-    </div>
+    </CheckboxContainer>
   )
 }
