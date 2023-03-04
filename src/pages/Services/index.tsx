@@ -1,5 +1,6 @@
+import { Button } from '../../components/Button'
 import { Checkbox } from '../../components/Checkbox'
-import { MainContainer, Row, TextInput } from './styles'
+import { MainContainer, Row, TextArea, TextInput } from './styles'
 
 export function Services() {
   return (
@@ -42,6 +43,17 @@ export function Services() {
               <Checkbox text="Está fazendo tratamento" value="treatment" />
               <Checkbox text="Tem lesão na pele" value="skin-hurted" />
             </Row>
+          </div>
+
+          <TextArea placeholder="Observações" />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              padding: '1rem 0',
+            }}
+          >
+            <Button text="Salvar" />
           </div>
         </form>
       </div>
