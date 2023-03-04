@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom'
 import { HeaderContainer, NavContainer } from './styles'
 
 export function Header() {
@@ -5,10 +6,7 @@ export function Header() {
     <HeaderContainer>
       <h2>Indy Pet Care</h2>
       <NavContainer>
-        <ul>
-          <li>Serviços</li>
-          <li>Clientes</li>
-        </ul>
+        <NavLink to="/">Serviços</NavLink>
       </NavContainer>
     </HeaderContainer>
   )

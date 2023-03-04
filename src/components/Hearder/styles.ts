@@ -16,26 +16,36 @@ export const HeaderContainer = styled.header`
 `
 
 export const NavContainer = styled.nav`
-  ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  justify-content: flex-start;
+
+  a {
     align-items: center;
+    /* border-left: 1px solid ${(props) => props.theme['black-400']}; */
+    border-bottom: 2px solid transparent;
+    color: ${(props) => props.theme['black-400']};
     display: flex;
+    font-size: 1.2rem;
     height: 100%;
-    list-style: none;
-    justify-content: flex-start;
+    justify-content: center;
+    margin: 0;
+    padding: 0 1rem;
+    transition: all 0.4s ease;
+    text-decoration: none;
+    opacity: 0.8;
 
-    li {
-      align-items: center;
-      border-left: 1px solid ${(props) => props.theme['black-400']};
-      display: flex;
-      font-size: 1.2rem;
-      justify-content: center;
-      height: 100%;
-      margin: 0;
-      padding: 0 1rem;
+    &.active {
+      font-weight: 500;
+      border-bottom: 2px solid ${(props) => props.theme['black-400']};
+      opacity: 1;
+    }
 
-      a {
-        height: 100%;
-      }
+    &:hover {
+      color: ${(props) => props.theme['black-500']};
+      border-bottom: 2px solid ${(props) => props.theme['black-500']};
+      opacity: 1;
     }
   }
 `
