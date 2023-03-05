@@ -1,5 +1,6 @@
 import { Button } from '../../components/Button'
 import { Checkbox } from '../../components/Checkbox'
+import { ServiceCard } from '../../components/ServiceCard'
 import { MainContainer, Row, TextArea, TextInput } from './styles'
 
 export function Services() {
@@ -57,8 +58,9 @@ export function Services() {
           </div>
         </form>
       </div>
-      <div>
-        <p>Hi</p>
+
+      <div className="list-wrapper">
+        <ServiceCard />
       </div>
     </MainContainer>
   )

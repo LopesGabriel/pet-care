@@ -6,12 +6,9 @@ export const MainContainer = styled.main`
   flex-direction: flex-start;
   gap: 2rem;
 
-  > div {
-    flex: 1;
-  }
-
   div.form-wrapper {
     max-width: 350px;
+    flex: 1;
 
     form {
       background-color: ${(props) => props.theme['black-500']};
@@ -25,6 +22,11 @@ export const MainContainer = styled.main`
         padding: 1rem 0;
       }
     }
+  }
+
+  div.list-wrapper {
+    display: flex;
+    flex-wrap: wrap;
   }
 `
 
