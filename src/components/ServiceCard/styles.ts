@@ -3,54 +3,77 @@ import styled from 'styled-components'
 export const ServiceCardContainer = styled.div`
   background-color: ${(props) => props.theme['black-400']};
   border-radius: 4px;
-	display: inline-block;
+  display: inline-block;
   padding: 0.5rem 1rem;
-	min-width: 280px;
+  position: relative;
 
-	time {
-		font-size: 0.8rem;
-	}
+  time {
+    font-size: 0.8rem;
+  }
 
-	hr {
-		width: 75%;
-		margin: 1rem auto;
-	}
+  hr {
+    width: 75%;
+    margin: 1rem auto;
+    border: 1px solid ${(props) => props.theme['black-600']};
+  }
 
-	div.card-header {
-		align-items: center;
-		display: flex;
-		justify-content: space-between;
-	}
+  div.card-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
 
-	div.body {
-		display: flex;
-		justify-content: space-between;
-		align-items: stretch;
+  div.body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 
-		.vr {
-			align-items: center;
-			display: flex;
-			height: 100%;
-			margin: 0 .5rem;
+    div.section {
+      margin-top: 1rem;
 
-			div {
-				height: 75%;
-				border: 1px solid ${(props) => props.theme['black-600']};
-			}
-		}
+      > h4 {
+        margin-bottom: 4px;
+      }
 
-		.base-box {
-			border-radius: 2px;
-			flex: 1;
-			padding: 0.5rem 1rem;
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
 
-			ul {
-				list-style: none;
-			}
-		}
+    ul {
+      flex: 1;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+`
 
-		.pet-info {
-			
-		}
-	}
+export const Badge = styled.div`
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
+  position: absolute;
+  top: -15px;
+  right: 10px;
+
+  &.novo {
+    background-color: ${(props) => props.theme['green-500']};
+    border-color: ${(props) => props.theme['green-700']};
+    color: ${(props) => props.theme['green-700']};
+  }
+
+  &.andamento {
+    background-color: ${(props) => props.theme['blue-400']};
+    border-color: ${(props) => props.theme['blue-800']};
+    color: ${(props) => props.theme['blue-800']};
+  }
+
+  &.atrasado {
+    background-color: ${(props) => props.theme['red-400']};
+    border-color: ${(props) => props.theme['red-800']};
+    color: ${(props) => props.theme['red-800']};
+  }
 `

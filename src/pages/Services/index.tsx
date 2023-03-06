@@ -61,6 +61,12 @@ export function Services() {
 
       <div className="list-wrapper">
         <ServiceCard />
+        <ServiceCard />
+        <ServiceCard />
+        <ServiceCard />
+        <ServiceCard />
+        <ServiceCard />
+        <ServiceCard />
       </div>
     </MainContainer>
   )

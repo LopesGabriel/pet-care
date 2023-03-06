@@ -4,10 +4,11 @@ export const MainContainer = styled.main`
   width: 100%;
   display: flex;
   flex-direction: flex-start;
+  align-items: flex-start;
   gap: 2rem;
 
   div.form-wrapper {
-    max-width: 350px;
+    max-width: 25%;
     flex: 1;
 
     form {
@@ -25,8 +26,17 @@ export const MainContainer = styled.main`
   }
 
   div.list-wrapper {
+    max-width: 75%;
     display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
     flex-wrap: wrap;
+    gap: 2rem;
+
+    > div {
+      flex: 1 0 21%;
+    }
   }
 `
 
