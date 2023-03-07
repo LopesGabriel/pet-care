@@ -1,42 +1,15 @@
 import styled from 'styled-components'
 
-export const MainContainer = styled.main`
-  width: 100%;
-  display: flex;
-  flex-direction: flex-start;
-  align-items: flex-start;
-  gap: 2rem;
+export const FormContainer = styled.form`
+  background-color: ${(props) => props.theme['black-500']};
+  border-radius: 4px;
+  padding: 0.8rem;
 
-  div.form-wrapper {
-    max-width: 25%;
-    flex: 1;
-
-    form {
-      background-color: ${(props) => props.theme['black-500']};
-      border-radius: 4px;
-      padding: 0.8rem;
-
-      div.input-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem 0;
-      }
-    }
-  }
-
-  div.list-wrapper {
-    max-width: 75%;
+  div.input-wrapper {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 2rem;
-
-    > div {
-      flex: 1 0 21%;
-    }
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 0;
   }
 `
 

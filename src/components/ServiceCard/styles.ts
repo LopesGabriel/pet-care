@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const ServiceCardContainer = styled.div`
   background-color: ${(props) => props.theme['black-400']};
   border-radius: 4px;
-  display: inline-block;
+  display: block;
   padding: 0.5rem 1rem;
   position: relative;
 
@@ -15,6 +15,7 @@ export const ServiceCardContainer = styled.div`
     width: 75%;
     margin: 1rem auto;
     border: 1px solid ${(props) => props.theme['black-600']};
+    opacity: 90%;
   }
 
   div.card-header {
@@ -28,24 +29,14 @@ export const ServiceCardContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;
 
-    div.section {
-      margin-top: 1rem;
-
-      > h4 {
-        margin-bottom: 4px;
-      }
-
-      &:first-of-type {
-        margin-top: 0;
-      }
-    }
-
     ul {
       flex: 1;
       list-style: none;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
+      padding: 0 0 0 0.5rem;
+      margin: 0;
     }
   }
 `

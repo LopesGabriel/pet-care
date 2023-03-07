@@ -14,23 +14,21 @@ export function ServiceCard() {
       <hr />
 
       <div className="body">
-        <div className="section">
-          <h4>Características</h4>
-          <ul>
-            <li>Pinscher</li>
-            <li>Marrom</li>
-          </ul>
-        </div>
+        <h6>Características</h6>
+        <ul>
+          <li>Pinscher</li>
+          <li>Marrom</li>
+        </ul>
 
-        <div className="section">
-          <h4>Serviços</h4>
-          <ul>
-            <li>Banho</li>
-            <li>Corte de unha</li>
-            <li>Desembolo</li>
-            <li>Tosa completa</li>
-          </ul>
-        </div>
+        <hr />
+
+        <h6>Serviços</h6>
+        <ul>
+          <li>Banho</li>
+          <li>Corte de unha</li>
+          <li>Desembolo</li>
+          <li>Tosa completa</li>
+        </ul>
       </div>
     </ServiceCardContainer>
   )
