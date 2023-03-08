@@ -1,6 +1,7 @@
 import { Button } from '../../components/Button'
 import { Checkbox } from '../../components/Checkbox'
 import { ServiceCard } from '../../components/ServiceCard'
+import { IService, ServiceStatus } from '../../entities/IService'
 import { Row, TextArea, TextInput, FormContainer } from './styles'
 
 export function Services() {
@@ -55,9 +56,12 @@ export function Services() {
   //   },
   // ]
 
-  const serviceItems = [
+  const serviceItems: IService[] = [
     {
       id: 'rgfsdgdh',
+      status: ServiceStatus.IN_PROGRESS,
+      createdAt: '2023-03-08T11:22:43.595Z',
+      updatedAt: '2023-03-08T11:22:43.595Z',
       tutor: {
         name: 'Gabriel Lopes',
         phone: '5561982352349',
@@ -80,10 +84,13 @@ export function Services() {
         },
       ],
       other: [],
-      observations: 'Cuidado para não machucar minha cachorra',
+      observation: 'Cuidado para não machucar minha cachorra',
     },
     {
       id: 'adfwrgtht',
+      status: ServiceStatus.IN_PROGRESS,
+      createdAt: '2023-03-08T10:22:43.595Z',
+      updatedAt: '2023-03-08T10:22:43.595Z',
       tutor: {
         name: 'Matheus Lopes',
         phone: '5561981510636',
@@ -111,10 +118,13 @@ export function Services() {
         },
       ],
       other: [],
-      observations: '',
+      observation: '',
     },
     {
       id: 'rgfhgthrrg',
+      status: ServiceStatus.IN_PROGRESS,
+      createdAt: '2023-03-08T10:10:43.595Z',
+      updatedAt: '2023-03-08T10:10:43.595Z',
       tutor: {
         name: 'Indinária Santos',
         phone: '5561998791147',
@@ -138,10 +148,13 @@ export function Services() {
           value: 'in-treatment',
         },
       ],
-      observations: 'Cuidado com essa gata, ela é meio doida',
+      observation: 'Cuidado com essa gata, ela é meio doida',
     },
     {
       id: 'rth54egthy',
+      status: ServiceStatus.IN_PROGRESS,
+      createdAt: '2023-03-08T09:05:43.595Z',
+      updatedAt: '2023-03-08T09:05:43.595Z',
       tutor: {
         name: 'Luciano Junior',
         phone: '5561988015245',
@@ -164,10 +177,13 @@ export function Services() {
         },
       ],
       other: [],
-      observations: '',
+      observation: '',
     },
     {
       id: 'rg1fd4gr4gbrtg',
+      status: ServiceStatus.IN_PROGRESS,
+      createdAt: '2023-03-08T07:40:43.595Z',
+      updatedAt: '2023-03-08T07:40:43.595Z',
       tutor: {
         name: 'Carolina Dieckman',
         phone: '5561989844356',
@@ -201,7 +217,7 @@ export function Services() {
           value: 'skin-hurted',
         },
       ],
-      observations: 'Não tosar a orelha',
+      observation: 'Não tosar a orelha',
     },
   ]
 
@@ -266,7 +282,7 @@ export function Services() {
         <div className="row gy-5">
           {serviceItems.map((item) => (
             <div key={item.id} className="col-6 col-md-4 col-lg-3">
-              <ServiceCard />
+              <ServiceCard {...item} />
             </div>
           ))}
         </div>

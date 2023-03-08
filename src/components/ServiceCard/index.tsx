@@ -1,14 +1,41 @@
+import {
+  formatDistanceToNow,
+  differenceInMinutes,
+  differenceInHours,
+} from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+
+import { IService } from '../../entities/IService'
 import { Badge, ServiceCardContainer } from './styles'
 
-export function ServiceCard() {
+interface IServiceProps extends IService {}
+
+function generateBadge(createdAt: string) {
+  const date = new Date(createdAt)
+  const now = new Date()
+
+  if (differenceInMinutes(now, date) < 15) {
+    return <Badge className="novo">Novo</Badge>
+  }
+
+  if (differenceInHours(now, date) < 3) {
+    return <Badge className="andamento">Em andamento</Badge>
+  }
+
+  return <Badge className="atrasado">Atrasado</Badge>
+}
+
+export function ServiceCard(props: IServiceProps) {
   return (
     <ServiceCardContainer>
-      <Badge className="andamento">Em andamento</Badge>
-      <h4>Maia Pinscher</h4>
+      {generateBadge(props.createdAt)}
+      <h4>{props.pet.name}</h4>
 
       <div className="card-header">
-        <h5>Gabriel Lopes</h5>
-        <time dateTime="2023-03-04T23:59:30">04/03/2023</time>
+        <h5>{props.tutor.name}</h5>
+        <time dateTime={props.createdAt}>
+          {formatDistanceToNow(new Date(props.createdAt), { locale: ptBR })}
+        </time>
       </div>
 
       <hr />
@@ -16,18 +43,17 @@ export function ServiceCard() {
       <div className="body">
         <h6>Características</h6>
         <ul>
-          <li>Pinscher</li>
-          <li>Marrom</li>
+          {props.pet.breed ? <li>{props.pet.breed}</li> : null}
+          {props.pet.color ? <li>{props.pet.color}</li> : null}
         </ul>
 
         <hr />
 
         <h6>Serviços</h6>
         <ul>
-          <li>Banho</li>
-          <li>Corte de unha</li>
-          <li>Desembolo</li>
-          <li>Tosa completa</li>
+          {props.services.map((service) => (
+            <li key={service.id}>{service.name}</li>
+          ))}
         </ul>
       </div>
     </ServiceCardContainer>
