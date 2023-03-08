@@ -1,36 +1,41 @@
-/* eslint-disable no-unused-vars */
-enum ServiceStatus {
-  IN_PROGRESS = 0,
-  COMPLETED = 1,
-  CANCELED = 2,
-}
-
 interface IService {
   id: string
-  status: ServiceStatus
-  createdAt: string
-  updatedAt: string
-  observation: string
-  pet: {
-    name: string
-    breed?: string
-    color?: string
-  }
-  tutor: {
-    name: string
-    phone: string
-  }
-  services: {
-    id: string
-    name: string
-    value: string
-  }[]
-  other: {
-    id: string
-    name: string
-    value: string
-  }[]
+  name: string
+  value: string
 }
 
-export { ServiceStatus }
+const sampleServices: IService[] = [
+  {
+    id: 'egfsgthg',
+    name: 'Banho',
+    value: 'banho',
+  },
+  {
+    id: 'egfshtgg',
+    name: 'Corte de unha',
+    value: 'corte-de-unha',
+  },
+  {
+    id: 'cHfEhhkg',
+    name: 'Tosa higiênica',
+    value: 'tosa-higienica',
+  },
+  {
+    id: 'cHgEchGy',
+    name: 'Tosa completa',
+    value: 'tosa-completa',
+  },
+  {
+    id: 'TrhjbKky',
+    name: 'Patinha de Poodle',
+    value: 'patinha-de-poodle',
+  },
+  {
+    id: 'DfhhlYku',
+    name: 'Transporte',
+    value: 'transporte',
+  },
+]
+
+export { sampleServices }
 export type { IService }

@@ -5,20 +5,20 @@ import {
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-import { IService } from '../../entities/IService'
+import { IServiceItem } from '../../entities/IServiceItem'
 import { Badge, ServiceCardContainer } from './styles'
 
-interface IServiceProps extends IService {}
+interface IServiceProps extends IServiceItem {}
 
 function generateBadge(createdAt: string) {
   const date = new Date(createdAt)
   const now = new Date()
 
-  if (differenceInMinutes(now, date) < 15) {
+  if (differenceInMinutes(now, date) < 10) {
     return <Badge className="novo">Novo</Badge>
   }
 
-  if (differenceInHours(now, date) < 3) {
+  if (differenceInHours(now, date) < 2) {
     return <Badge className="andamento">Em andamento</Badge>
   }
 
