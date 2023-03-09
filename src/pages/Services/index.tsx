@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
+import { v4 as uuid } from 'uuid'
 import { Button } from '../../components/Button'
 import { Checkbox } from '../../components/Checkbox'
 import { ServiceCard } from '../../components/ServiceCard'
 import {
   INewServiceFormInput,
-  initialState,
+  initialState as formInitialState,
 } from '../../entities/INewServiceForm'
-import { sampleServiceItems } from '../../entities/IServiceItem'
+import { IServiceItem, ServiceStatus } from '../../entities/IServiceItem'
 import { Row, TextArea, TextInput, FormContainer } from './styles'
+import { IService, sampleServices } from '../../entities/IService'
+import { sampleTreatments } from '../../entities/ITreatments'
 
 export function Services() {
-  const [formData, setFormData] = useState<INewServiceFormInput>(initialState)
+  const [formData, setFormData] =
+    useState<INewServiceFormInput>(formInitialState)
+  const [activeServices, setActiveServices] = useState<IServiceItem[]>([])
 
   const updateField = (
     data: string | string[],
@@ -20,8 +25,77 @@ export function Services() {
     setFormData(newForm)
   }
 
+  const handleCheckbox = (event: { value: IService; checked: boolean }) => {
+    const { checked, value } = event
+    const isService = !!sampleServices.find((s) => s.id === value.id)
+
+    if (checked) {
+      if (isService) {
+        const newServices = formData.services.filter(
+          (service) => service.id !== value.id,
+        )
+        newServices.push(value)
+        setFormData({ ...formData, services: newServices })
+      } else {
+        const newTreatments = formData.treatments.filter(
+          (treatment) => treatment.id !== value.id,
+        )
+        newTreatments.push(value)
+        setFormData({ ...formData, treatments: newTreatments })
+      }
+
+      return
+    }
+
+    if (isService) {
+      const newServices = formData.services.filter(
+        (service) => service.id !== value.id,
+      )
+      setFormData({ ...formData, services: newServices })
+    } else {
+      const newTreatments = formData.treatments.filter(
+        (treatment) => treatment.id !== value.id,
+      )
+      setFormData({ ...formData, treatments: newTreatments })
+    }
+  }
+
   const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const now = new Date().toISOString()
+    const {
+      breed,
+      color,
+      observation,
+      petName,
+      phone,
+      services,
+      treatments,
+      tutor,
+    } = formData
+
+    const newService: IServiceItem = {
+      createdAt: now,
+      observation,
+      id: uuid(),
+      pet: {
+        name: petName,
+        breed,
+        color,
+      },
+      services,
+      status: ServiceStatus.IN_PROGRESS,
+      treatments,
+      tutor: {
+        name: tutor,
+        phone,
+      },
+      updatedAt: now,
+    }
+
+    const newServices = [...activeServices, newService]
+    setActiveServices(newServices)
+    setFormData(formInitialState)
   }
 
   const {
@@ -77,14 +151,14 @@ export function Services() {
               <h4>Serviços</h4>
 
               <Row gap="0.5rem">
-                <Checkbox text="Banho" value="banho" />
-                <Checkbox text="Corte de unha" value="corte-unha" />
-
-                <Checkbox text="Tosa higiênica" value="tosa-higienica" />
-                <Checkbox text="Tosa completa" value="tosa-completa" />
-
-                <Checkbox text="Patinha de Poodle" value="patinha-de-poodle" />
-                <Checkbox text="Transporte" value="tosa-completa" />
+                {sampleServices.map((service) => (
+                  <Checkbox
+                    key={service.id}
+                    text={service.name}
+                    value={service}
+                    onChange={handleCheckbox}
+                  />
+                ))}
               </Row>
             </div>
 
@@ -92,9 +166,14 @@ export function Services() {
               <h4>Outros</h4>
 
               <Row gap="0.5rem">
-                <Checkbox text="Tem alergia" value="alergy" />
-                <Checkbox text="Está fazendo tratamento" value="treatment" />
-                <Checkbox text="Tem lesão na pele" value="skin-hurted" />
+                {sampleTreatments.map((treatment) => (
+                  <Checkbox
+                    key={treatment.id}
+                    text={treatment.name}
+                    value={treatment}
+                    onChange={handleCheckbox}
+                  />
+                ))}
               </Row>
             </div>
 
@@ -118,7 +197,7 @@ export function Services() {
 
       <div className="col-12 col-md-6 col-lg-9">
         <div className="row gy-5">
-          {sampleServiceItems.map((item) => (
+          {activeServices.map((item) => (
             <div key={item.id} className="col-6 col-md-4 col-lg-3">
               <ServiceCard {...item} />
             </div>

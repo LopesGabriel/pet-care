@@ -6,6 +6,7 @@ export const ServiceCardContainer = styled.div`
   display: block;
   padding: 0.5rem 1rem;
   position: relative;
+  height: 100%;
 
   time {
     font-size: 0.8rem;

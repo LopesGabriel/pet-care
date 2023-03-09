@@ -1,11 +1,14 @@
+import { IService } from './IService'
+import { ITreatment } from './ITreatments'
+
 interface INewServiceFormInput {
   tutor: string
   phone: string
   petName: string
   breed: string
   color: string
-  services: string[]
-  treatments: string[]
+  services: IService[]
+  treatments: ITreatment[]
   observation: string
 }
 
