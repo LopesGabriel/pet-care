@@ -46,12 +46,10 @@ const sampleServiceItems: IServiceItem[] = [
       {
         id: 'egfsgthg',
         name: 'Banho',
-        value: 'banho',
       },
       {
         id: 'egfshtgg',
         name: 'Corte de unha',
-        value: 'corte-de-unha',
       },
     ],
     treatments: [],
@@ -75,17 +73,14 @@ const sampleServiceItems: IServiceItem[] = [
       {
         id: 'egfsgthg',
         name: 'Banho',
-        value: 'banho',
       },
       {
         id: 'egfshtgg',
         name: 'Corte de unha',
-        value: 'corte-de-unha',
       },
       {
         id: 'DfhhlYku',
         name: 'Transporte',
-        value: 'transporte',
       },
     ],
     treatments: [],
@@ -109,14 +104,12 @@ const sampleServiceItems: IServiceItem[] = [
       {
         id: 'egfsgthg',
         name: 'Banho',
-        value: 'banho',
       },
     ],
     treatments: [
       {
         id: 'dCjtfyekh',
         name: 'Está fazendo tratamento',
-        value: 'in-treatment',
       },
     ],
     observation: 'Cuidado com essa gata, ela é meio doida',
@@ -139,12 +132,10 @@ const sampleServiceItems: IServiceItem[] = [
       {
         id: 'egfsgthg',
         name: 'Banho',
-        value: 'banho',
       },
       {
         id: 'cHfEhhkg',
         name: 'Tosa higiênica',
-        value: 'tosa-higienica',
       },
     ],
     treatments: [],
@@ -168,24 +159,20 @@ const sampleServiceItems: IServiceItem[] = [
       {
         id: 'egfsgthg',
         name: 'Banho',
-        value: 'banho',
       },
       {
         id: 'cHgEchGy',
         name: 'Tosa completa',
-        value: 'tosa-completa',
       },
       {
         id: 'DfhhlYku',
         name: 'Transporte',
-        value: 'transporte',
       },
     ],
     treatments: [
       {
         id: 'hYjmfheCh',
         name: 'Tem lesão na pele',
-        value: 'skin-hurted',
       },
     ],
     observation: 'Não tosar a orelha',
