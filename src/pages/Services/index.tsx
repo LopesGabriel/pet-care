@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import { collection, getDocs } from 'firebase/firestore'
 import { Button } from '../../components/Button'
 import { Checkbox } from '../../components/Checkbox'
 import { ServiceCard } from '../../components/ServiceCard'
@@ -9,13 +10,30 @@ import {
 } from '../../entities/INewServiceForm'
 import { IServiceItem, ServiceStatus } from '../../entities/IServiceItem'
 import { Row, TextArea, TextInput, FormContainer } from './styles'
-import { IService, sampleServices } from '../../entities/IService'
+import { IService } from '../../entities/IService'
 import { sampleTreatments } from '../../entities/ITreatments'
+import { firestore } from '../../firebase/firestore'
 
 export function Services() {
+  const servicesCollection = collection(firestore, '/services')
   const [formData, setFormData] =
     useState<INewServiceFormInput>(formInitialState)
   const [activeServices, setActiveServices] = useState<IServiceItem[]>([])
+  const [services, setServices] = useState<IService[]>([])
+
+  useEffect(() => {
+    console.info('Fetching services')
+    getDocs(servicesCollection).then((snapshot) => {
+      console.info('Services found')
+      const servicesArray: IService[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().name,
+      }))
+
+      setServices(servicesArray)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const updateField = (
     data: string | string[],
@@ -27,7 +45,7 @@ export function Services() {
 
   const handleCheckbox = (event: { value: IService; checked: boolean }) => {
     const { checked, value } = event
-    const isService = !!sampleServices.find((s) => s.id === value.id)
+    const isService = !!services.find((s) => s.id === value.id)
 
     if (checked) {
       if (isService) {
@@ -151,7 +169,7 @@ export function Services() {
               <h4>Serviços</h4>
 
               <Row gap="0.5rem">
-                {sampleServices.map((service) => (
+                {services.map((service) => (
                   <Checkbox
                     key={service.id}
                     text={service.name}
