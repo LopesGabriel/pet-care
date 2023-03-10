@@ -4,38 +4,74 @@ import {
   differenceInHours,
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useEffect, useState } from 'react'
 
 import { IServiceItem } from '../../entities/IServiceItem'
 import { Badge, ServiceCardContainer } from './styles'
 
 interface IServiceProps extends IServiceItem {}
-
-function generateBadge(createdAt: string) {
-  const date = new Date(createdAt)
-  const now = new Date()
-
-  if (differenceInMinutes(now, date) < 10) {
-    return <Badge className="novo">Novo</Badge>
-  }
-
-  if (differenceInHours(now, date) < 2) {
-    return <Badge className="andamento">Em andamento</Badge>
-  }
-
-  return <Badge className="atrasado">Atrasado</Badge>
+interface IUIElements {
+  time: string
+  badge: any
 }
 
 export function ServiceCard(props: IServiceProps) {
+  const [timerId, setTimerId] = useState<number>(0)
+  const [uiElements, setUiElements] = useState<IUIElements>({
+    badge: generateBadge(),
+    time: generateTime(),
+  })
+
+  function generateBadge() {
+    const date = new Date(props.createdAt)
+    const now = new Date()
+
+    if (differenceInMinutes(now, date) < 10) {
+      return <Badge className="novo">Novo</Badge>
+    }
+
+    if (differenceInHours(now, date) < 2) {
+      return <Badge className="andamento">Em andamento</Badge>
+    }
+
+    return <Badge className="atrasado">Atrasado</Badge>
+  }
+
+  function generateTime() {
+    return formatDistanceToNow(new Date(props.createdAt), { locale: ptBR })
+  }
+
+  function updateUI() {
+    setUiElements({
+      time: generateTime(),
+      badge: generateBadge(),
+    })
+  }
+
+  useEffect(() => {
+    console.log('Acionou useEffect', timerId)
+    if (!timerId) {
+      clearInterval(timerId)
+      const timer = setInterval(() => {
+        console.log('Aqui updateUI')
+        updateUI()
+      }, 60000)
+
+      setTimerId(timer)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uiElements])
+
+  const { badge, time } = uiElements
+
   return (
     <ServiceCardContainer>
-      {generateBadge(props.createdAt)}
+      {badge}
       <h4>{props.pet.name}</h4>
 
       <div className="card-header">
         <h5>{props.tutor.name}</h5>
-        <time dateTime={props.createdAt}>
-          {formatDistanceToNow(new Date(props.createdAt), { locale: ptBR })}
-        </time>
+        <time dateTime={props.createdAt}>{time}</time>
       </div>
 
       <hr />

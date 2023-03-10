@@ -1,11 +1,18 @@
 import { CheckboxContainer } from './styles'
 import { v4 } from 'uuid'
 import { ChangeEventHandler } from 'react'
+import { IService } from '../../entities/IService'
+import { ITreatment } from '../../entities/ITreatments'
+
+interface ICheckboxOnChangeArgs {
+  value: IService | ITreatment
+  checked: boolean
+}
 
 interface CheckboxProps {
-  value: any
+  value: IService | ITreatment
   text: string
-  onChange: (data: { value: any; checked: boolean }) => void
+  onChange: (data: ICheckboxOnChangeArgs) => void
 }
 
 export function Checkbox({ value, text, onChange }: CheckboxProps) {
