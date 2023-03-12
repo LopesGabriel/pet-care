@@ -11,15 +11,17 @@ import {
 import { IServiceItem, ServiceStatus } from '../../entities/IServiceItem'
 import { Row, TextArea, TextInput, FormContainer } from './styles'
 import { IService } from '../../entities/IService'
-import { sampleTreatments } from '../../entities/ITreatments'
+import { ITreatment } from '../../entities/ITreatments'
 import { firestore } from '../../firebase/firestore'
 
 export function Services() {
   const servicesCollection = collection(firestore, '/services')
+  const treatmentsCollection = collection(firestore, '/treatments')
   const [formData, setFormData] =
     useState<INewServiceFormInput>(formInitialState)
   const [activeServices, setActiveServices] = useState<IServiceItem[]>([])
   const [services, setServices] = useState<IService[]>([])
+  const [treatments, setTreatments] = useState<ITreatment[]>([])
 
   useEffect(() => {
     console.info('Fetching services')
@@ -31,6 +33,17 @@ export function Services() {
       }))
 
       setServices(servicesArray)
+    })
+
+    console.info('Fetching treatments')
+    getDocs(treatmentsCollection).then((snapshot) => {
+      console.info('Treatments found')
+      const treatmentsArray: ITreatment[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().name,
+      }))
+
+      setTreatments(treatmentsArray)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -127,6 +140,8 @@ export function Services() {
     tutor,
   } = formData
 
+  const isSaveDisabled = !petName || !tutor || !phone || !breed || !color
+
   return (
     <main className="row">
       <div className="col-12 col-md-6 col-lg-3">
@@ -184,7 +199,7 @@ export function Services() {
               <h4>Outros</h4>
 
               <Row gap="0.5rem">
-                {sampleTreatments.map((treatment) => (
+                {treatments.map((treatment) => (
                   <Checkbox
                     key={treatment.id}
                     text={treatment.name}
@@ -207,7 +222,12 @@ export function Services() {
                 padding: '1rem 0',
               }}
             >
-              <Button text="Salvar" onClick={() => console.log(formData)} />
+              <Button
+                disabled={isSaveDisabled}
+                disabledText="Preencha todos os campos"
+                text="Salvar"
+                onClick={() => console.log(formData)}
+              />
             </div>
           </FormContainer>
         </div>

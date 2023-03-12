@@ -20,8 +20,14 @@ export const ButtonContainer = styled.button<ButtonContainerProps>`
   border: none;
   font-weight: 500;
   /* font-weight: 600; */
-  &:hover {
+
+  &:not([disabled]):hover {
     box-shadow: 0 2px 1px 1px #00000020;
     cursor: pointer;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
   }
 `
