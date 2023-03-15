@@ -144,7 +144,7 @@ export function Services() {
 
   return (
     <main className="row">
-      <div className="col-12 col-md-6 col-lg-3">
+      <div className="col-12 col-md-5 col-lg-4 col-xl-3 mb-4 mb-sm-0">
         <div className="form-wrapper">
           <FormContainer onSubmit={handleForm}>
             <h3>Adicionar um novo pet</h3>
@@ -233,10 +233,10 @@ export function Services() {
         </div>
       </div>
 
-      <div className="col-12 col-md-6 col-lg-9">
+      <div className="col-12 col-md-7 col-lg-8 col-xl-9">
         <div className="row gy-5">
           {activeServices.map((item) => (
-            <div key={item.id} className="col-6 col-md-4 col-lg-3">
+            <div key={item.id} className="col-12 col-md-6 col-lg-4 col-xl-3">
               <ServiceCard {...item} />
             </div>
           ))}
