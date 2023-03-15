@@ -16,7 +16,6 @@ interface IUIElements {
 }
 
 export function ServiceCard(props: IServiceProps) {
-  const [timerId, setTimerId] = useState<number>(0)
   const [uiElements, setUiElements] = useState<IUIElements>({
     badge: generateBadge(),
     time: generateTime(),
@@ -49,15 +48,10 @@ export function ServiceCard(props: IServiceProps) {
   }
 
   useEffect(() => {
-    console.log('Acionou useEffect', timerId)
-    if (!timerId) {
-      clearInterval(timerId)
-      const timer = setInterval(() => {
-        console.log('Aqui updateUI')
-        updateUI()
-      }, 60000)
+    const timer = setInterval(() => updateUI(), 60000)
 
-      setTimerId(timer)
+    return () => {
+      clearInterval(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uiElements])
