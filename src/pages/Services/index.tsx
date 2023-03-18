@@ -13,6 +13,8 @@ import { Row, TextArea, TextInput, FormContainer } from './styles'
 import { IService } from '../../entities/IService'
 import { ITreatment } from '../../entities/ITreatments'
 import { firestore } from '../../firebase/firestore'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { auth } from '../../firebase/auth'
 
 export function Services() {
   const servicesCollection = collection(firestore, '/services')
@@ -22,8 +24,16 @@ export function Services() {
   const [activeServices, setActiveServices] = useState<IServiceItem[]>([])
   const [services, setServices] = useState<IService[]>([])
   const [treatments, setTreatments] = useState<ITreatment[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
+    console.info('Checking current user')
+
+    if (!auth.currentUser) {
+      console.info('User is not authenticated!')
+      return navigate('/auth')
+    }
+
     console.info('Fetching services')
     getDocs(servicesCollection).then((snapshot) => {
       console.info('Services found')
@@ -237,7 +247,9 @@ export function Services() {
         <div className="row gy-5">
           {activeServices.map((item) => (
             <div key={item.id} className="col-12 col-md-6 col-lg-4 col-xl-3">
-              <ServiceCard {...item} />
+              <NavLink to={`/${item.id}`}>
+                <ServiceCard {...item} />
+              </NavLink>
             </div>
           ))}
         </div>
