@@ -1,12 +1,15 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+
 import { auth } from '../../firebase/auth'
+import { DataWrapper } from './styles'
 
 function SelectedItemPage(props: any) {
   const { itemId } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log('Page for item', itemId)
     console.info('Checking current user')
 
     if (!auth.currentUser) {
@@ -18,9 +21,25 @@ function SelectedItemPage(props: any) {
   }, [])
 
   return (
-    <>
-      <h1>You&apos;re in Item page for item {itemId}</h1>
-    </>
+    <div className="container" style={{ padding: 0 }}>
+      <h1>Maia Pinscher</h1>
+      <small>Criado por Indy Santos</small>
+
+      <div className="row mt-4">
+        <div className="col-6 col-md-12">
+          <DataWrapper>
+            <h4>Tutor:</h4>
+            <span>Gabriel de Oliveira Lopes</span>
+          </DataWrapper>
+        </div>
+        <div className="col-6 col-md-12">
+          <DataWrapper>
+            <h4>Telefone:</h4>
+            <span>(61) 9 8235-2349</span>
+          </DataWrapper>
+        </div>
+      </div>
+    </div>
   )
 }
 

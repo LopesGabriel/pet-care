@@ -1,14 +1,13 @@
 import { Outlet } from 'react-router-dom'
 import { Header } from '../../components/Hearder'
-import { LayoutContainer } from './styles'
 
 export function DefaultLayout() {
   return (
     <div>
       <Header />
-      <LayoutContainer>
+      <div className="container-fluid pt-4">
         <Outlet />
-      </LayoutContainer>
+      </div>
     </div>
   )
 }
