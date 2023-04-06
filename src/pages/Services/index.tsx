@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { collection, getDocs, setDoc, doc } from 'firebase/firestore'
+import {
+  collection,
+  onSnapshot,
+  setDoc,
+  query,
+  where,
+  getDocs,
+  doc,
+} from 'firebase/firestore'
 import { Button } from '../../components/Button'
 import { Checkbox } from '../../components/Checkbox'
 import { ServiceCard } from '../../components/ServiceCard'
@@ -51,14 +59,18 @@ export function Services() {
       setTreatments(treatmentsArray)
     })
 
-    getDocs(jobsCollection).then((snapshot) => {
-      const jobsArray: IJob[] = snapshot.docs.map((doc) => ({
+    const q = query(jobsCollection, where('status', '==', 0))
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const newJobs: IJob[] = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...(doc.data() as Omit<IJob, 'id'>),
+        ...(doc.data() as any),
       }))
 
-      setJobs(jobsArray)
+      console.log('Jobs', newJobs)
+      setJobs(newJobs)
     })
+
+    return unsubscribe
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
