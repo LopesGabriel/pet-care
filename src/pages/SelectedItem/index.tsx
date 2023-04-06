@@ -64,7 +64,7 @@ function SelectedItemPage(props: any) {
         {
           job.observation
             ? <div className="col-12">
-              <DataWrapper>
+              <DataWrapper className="flex-column align-items-start">
                 <h4 className='text-warning'>Observação:</h4>
                 <p>{job.observation}</p>
               </DataWrapper>
