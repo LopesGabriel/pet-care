@@ -1,82 +1,36 @@
-import React, { useState } from 'react'
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  updateProfile,
-} from 'firebase/auth'
+import { FormEventHandler, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/Button'
 import { TextInput } from '../Services/styles'
-import { auth } from '../../firebase/auth'
 import { AuthWrapper, AuthForm } from './styles'
-import { FirebaseError } from 'firebase/app'
-import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 export function Auth() {
   const navigate = useNavigate()
+  const { isSignIn, isLoading, authenticateUser, user } = useAuth()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [userName, setUserName] = useState('')
-  const [isSignIn, setSignIn] = useState(true)
-  const [isLoading, setLoading] = useState(false)
 
-  const handleLogin: React.FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-
-    if (isSignIn) {
-      try {
-        const { user } = await signInWithEmailAndPassword(auth, email, password)
-
-        if (!user.emailVerified) {
-          alert('Verifique seu email!')
-          return
-        }
-
-        navigate('/')
-      } catch (err: any) {
-        if (err instanceof FirebaseError) {
-          if (err.code === 'auth/user-not-found') {
-            setSignIn(false)
-          }
-        }
-      } finally {
-        setLoading(false)
-      }
-      return
+  useEffect(() => {
+    if (user) {
+      navigate('/')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
-    await createNewUser()
-  }
+  const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
+    if (authenticateUser === undefined) return
 
-  const createNewUser = async () => {
-    if (password !== passwordConfirm) {
-      alert('A senhã não bate com a confirmação.')
-      return
-    }
-
-    try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      )
-
-      await updateProfile(user, { displayName: userName })
-      await sendEmailVerification(user)
-      alert('Verifique seu email')
-    } catch (err) {
-      console.error(err)
-      if (err instanceof FirebaseError) {
-        console.error('error code:', err.code)
-        if (err.code === 'auth/email-already-in-use') {
-          alert('O email informado está em uso')
-        }
-      }
-    } finally {
-      setLoading(false)
-    }
+    await authenticateUser({
+      email,
+      event: e,
+      password,
+      passwordConfirmation,
+      userName,
+    })
   }
 
   function generateCreateAccountInputs() {
@@ -84,11 +38,11 @@ export function Auth() {
       <>
         <TextInput
           placeholder="Confirme sua senha"
-          value={passwordConfirm}
+          value={passwordConfirmation}
           type="password"
           required={true}
           minLength={6}
-          onChange={(e) => setPasswordConfirm(e.target.value)}
+          onChange={(e) => setPasswordConfirmation(e.target.value)}
         />
         <TextInput
           placeholder="Qual o seu nome?"
