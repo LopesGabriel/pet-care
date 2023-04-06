@@ -1,23 +1,22 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { auth } from '../../firebase/auth'
 import { DataWrapper } from './styles'
+import { useAuth } from '../../context/AuthContext'
 
 function SelectedItemPage(props: any) {
   const { itemId } = useParams()
+  const { user } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
     console.log('Page for item', itemId)
-    console.info('Checking current user')
 
-    if (!auth.currentUser) {
+    if (!user) {
       console.info('User is not authenticated!')
       return navigate('/auth')
     }
-
-    console.info('Current user is', auth.currentUser)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

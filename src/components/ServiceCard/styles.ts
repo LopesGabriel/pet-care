@@ -12,6 +12,13 @@ export const ServiceCardContainer = styled.div`
     font-size: 0.8rem;
   }
 
+  h4 {
+    max-width: 180px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   hr {
     width: 75%;
     margin: 1rem auto;
@@ -23,6 +30,13 @@ export const ServiceCardContainer = styled.div`
     align-items: center;
     display: flex;
     justify-content: space-between;
+
+    h5 {
+      max-width: 180px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
 
   div.body {
@@ -50,6 +64,20 @@ export const Badge = styled.div`
   position: absolute;
   top: -15px;
   right: 10px;
+
+  i {
+    padding: 5px;
+    border-radius: 50%;
+    color: ${(props) => props.theme['red-800']};
+    line-height: 0.4;
+    border: 1px solid ${(props) => props.theme['red-800']};
+    font-style: unset;
+    font-weight: bold;
+    background-color: ${(props) => props.theme['red-400']};
+    position: absolute;
+    top: -6px;
+    right: -8px;
+  }
 
   &.novo {
     background-color: ${(props) => props.theme['green-500']};

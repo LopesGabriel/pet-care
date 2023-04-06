@@ -9,7 +9,9 @@ import { useEffect, useState } from 'react'
 import { IServiceItem } from '../../entities/IServiceItem'
 import { Badge, ServiceCardContainer } from './styles'
 
-interface IServiceProps extends IServiceItem {}
+// eslint-disable-next-line prettier/prettier
+interface IServiceProps extends IServiceItem { }
+
 interface IUIElements {
   time: string
   badge: any
@@ -26,14 +28,29 @@ export function ServiceCard(props: IServiceProps) {
     const now = new Date()
 
     if (differenceInMinutes(now, date) < 10) {
-      return <Badge className="novo">Novo</Badge>
+      return (
+        <Badge className="novo">
+          {props.observation ? <i>!</i> : null}
+          Novo
+        </Badge>
+      )
     }
 
     if (differenceInHours(now, date) < 2) {
-      return <Badge className="andamento">Em andamento</Badge>
+      return (
+        <Badge className="andamento">
+          {props.observation ? <i>!</i> : null}
+          Em andamento
+        </Badge>
+      )
     }
 
-    return <Badge className="atrasado">Atrasado</Badge>
+    return (
+      <Badge className="atrasado">
+        {props.observation ? <i>!</i> : null}
+        Atrasado
+      </Badge>
+    )
   }
 
   function generateTime() {
