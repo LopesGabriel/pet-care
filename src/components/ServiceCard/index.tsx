@@ -6,18 +6,18 @@ import {
 import { ptBR } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
 
-import { IServiceItem } from '../../entities/IServiceItem'
+import { IJob } from '../../entities/IJob'
 import { Badge, ServiceCardContainer } from './styles'
 
 // eslint-disable-next-line prettier/prettier
-interface IServiceProps extends IServiceItem { }
+interface IServiceCardProps extends IJob { }
 
 interface IUIElements {
   time: string
   badge: any
 }
 
-export function ServiceCard(props: IServiceProps) {
+export function ServiceCard(props: IServiceCardProps) {
   const [uiElements, setUiElements] = useState<IUIElements>({
     badge: generateBadge(),
     time: generateTime(),

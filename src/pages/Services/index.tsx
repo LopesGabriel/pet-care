@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, setDoc, doc } from 'firebase/firestore'
 import { Button } from '../../components/Button'
 import { Checkbox } from '../../components/Checkbox'
 import { ServiceCard } from '../../components/ServiceCard'
@@ -8,7 +8,7 @@ import {
   INewServiceFormInput,
   initialState as formInitialState,
 } from '../../entities/INewServiceForm'
-import { IServiceItem, ServiceStatus } from '../../entities/IServiceItem'
+import { IJob, ServiceStatus } from '../../entities/IJob'
 import { Row, TextArea, TextInput, FormContainer } from './styles'
 import { IService } from '../../entities/IService'
 import { ITreatment } from '../../entities/ITreatments'
@@ -20,9 +20,10 @@ export function Services() {
   const { user } = useAuth()
   const servicesCollection = collection(firestore, '/services')
   const treatmentsCollection = collection(firestore, '/treatments')
+  const jobsCollection = collection(firestore, '/jobs')
   const [formData, setFormData] =
     useState<INewServiceFormInput>(formInitialState)
-  const [activeServices, setActiveServices] = useState<IServiceItem[]>([])
+  const [jobs, setJobs] = useState<IJob[]>([])
   const [services, setServices] = useState<IService[]>([])
   const [treatments, setTreatments] = useState<ITreatment[]>([])
   const navigate = useNavigate()
@@ -48,6 +49,15 @@ export function Services() {
       }))
 
       setTreatments(treatmentsArray)
+    })
+
+    getDocs(jobsCollection).then((snapshot) => {
+      const jobsArray: IJob[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<IJob, 'id'>),
+      }))
+
+      setJobs(jobsArray)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -95,7 +105,21 @@ export function Services() {
     }
   }
 
-  const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
+  const saveNewJob = async (job: IJob) => {
+    await setDoc(doc(firestore, 'jobs', job.id), {
+      createdAt: job.createdAt,
+      createdBy: job.createdBy,
+      observation: job.observation,
+      pet: job.pet,
+      services: job.services,
+      status: job.status,
+      treatments: job.treatments,
+      tutor: job.tutor,
+      updatedAt: job.updatedAt,
+    })
+  }
+
+  const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const now = new Date().toISOString()
     const {
@@ -109,8 +133,9 @@ export function Services() {
       tutor,
     } = formData
 
-    const newService: IServiceItem = {
+    const newJob: IJob = {
       createdAt: now,
+      createdBy: user?.uid!,
       observation,
       id: uuid(),
       pet: {
@@ -128,9 +153,15 @@ export function Services() {
       updatedAt: now,
     }
 
-    const newServices = [...activeServices, newService]
-    setActiveServices(newServices)
-    setFormData(formInitialState)
+    try {
+      await saveNewJob(newJob)
+      const newJobs = [...jobs, newJob]
+      setJobs(newJobs)
+      setFormData(formInitialState)
+    } catch (err) {
+      console.error(err)
+      alert('Não foi possível adicionar o novo serviço, tente novamente.')
+    }
   }
 
   const {
@@ -230,7 +261,6 @@ export function Services() {
                 disabled={isSaveDisabled}
                 disabledText="Preencha todos os campos"
                 text="Salvar"
-                onClick={() => console.log(formData)}
               />
             </div>
           </FormContainer>
@@ -239,7 +269,7 @@ export function Services() {
 
       <div className="col-12 col-md-7 col-xl-8">
         <div className="row gy-5">
-          {activeServices.map((item) => (
+          {jobs.map((item) => (
             <div key={item.id} className="col-12 col-md-6 col-xl-4">
               <NavLink
                 to={`/${item.id}`}
