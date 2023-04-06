@@ -4,6 +4,7 @@ import {
   FormEvent,
   useEffect,
   useContext,
+  ReactNode,
 } from 'react'
 import {
   User,
@@ -36,6 +37,7 @@ interface IAuthContextType {
   user: User | null
   isLoading: boolean
   isSignIn: boolean
+  fulfilled: boolean
   authenticateUser?: (data: IAuthenticateUserArgs) => Promise<void>
 }
 
@@ -43,17 +45,19 @@ const UserContext = createContext<IAuthContextType>({
   user: null,
   isLoading: false,
   isSignIn: false,
+  fulfilled: false,
 })
 
 interface IProps {
   // eslint-disable-next-line no-undef
-  children: string | JSX.Element | JSX.Element[]
+  children: ReactNode
 }
 
 const AuthContextProvider = ({ children }: IProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [isSignIn, setSignIn] = useState(false)
   const [isLoading, setLoading] = useState(false)
+  const [fulfilled, setFulfilled] = useState(false)
 
   const createNewUser = async ({
     password,
@@ -131,6 +135,7 @@ const AuthContextProvider = ({ children }: IProps) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log('On Auth State Change', currentUser)
       setUser(currentUser)
+      setFulfilled(true)
     })
 
     return unsubscribe
@@ -138,7 +143,7 @@ const AuthContextProvider = ({ children }: IProps) => {
 
   return (
     <UserContext.Provider
-      value={{ user, isLoading, authenticateUser, isSignIn }}
+      value={{ user, isLoading, authenticateUser, isSignIn, fulfilled }}
     >
       {children}
     </UserContext.Provider>
