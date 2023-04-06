@@ -14,9 +14,10 @@ import { IService } from '../../entities/IService'
 import { ITreatment } from '../../entities/ITreatments'
 import { firestore } from '../../firebase/firestore'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { auth } from '../../firebase/auth'
+import { useAuth } from '../../context/AuthContext'
 
 export function Services() {
+  const { user } = useAuth()
   const servicesCollection = collection(firestore, '/services')
   const treatmentsCollection = collection(firestore, '/treatments')
   const [formData, setFormData] =
@@ -27,18 +28,11 @@ export function Services() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.info('Checking current user')
-
-    if (!auth.currentUser) {
-      console.info('User is not authenticated!')
+    if (!user) {
       return navigate('/auth')
     }
 
-    console.log('Current User:', auth.currentUser)
-
-    console.info('Fetching services')
     getDocs(servicesCollection).then((snapshot) => {
-      console.info('Services found')
       const servicesArray: IService[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         name: doc.data().name,
@@ -47,9 +41,7 @@ export function Services() {
       setServices(servicesArray)
     })
 
-    console.info('Fetching treatments')
     getDocs(treatmentsCollection).then((snapshot) => {
-      console.info('Treatments found')
       const treatmentsArray: ITreatment[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         name: doc.data().name,
