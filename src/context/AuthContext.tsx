@@ -13,6 +13,7 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  signOut,
 } from 'firebase/auth'
 
 import { auth } from '../firebase/auth'
@@ -39,12 +40,13 @@ interface IAuthContextType {
   isSignIn: boolean
   fulfilled: boolean
   authenticateUser?: (data: IAuthenticateUserArgs) => Promise<void>
+  logOut?: () => Promise<void>
 }
 
 const UserContext = createContext<IAuthContextType>({
   user: null,
   isLoading: false,
-  isSignIn: false,
+  isSignIn: true,
   fulfilled: false,
 })
 
@@ -55,7 +57,7 @@ interface IProps {
 
 const AuthContextProvider = ({ children }: IProps) => {
   const [user, setUser] = useState<User | null>(null)
-  const [isSignIn, setSignIn] = useState(false)
+  const [isSignIn, setSignIn] = useState(true)
   const [isLoading, setLoading] = useState(false)
   const [fulfilled, setFulfilled] = useState(false)
 
@@ -131,6 +133,18 @@ const AuthContextProvider = ({ children }: IProps) => {
     })
   }
 
+  const logOut = async () => {
+    try {
+      setLoading(true)
+      await signOut(auth)
+    } catch (err) {
+      console.error(err)
+      alert('Não foi possível desconectar')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log('On Auth State Change', currentUser)
@@ -143,7 +157,7 @@ const AuthContextProvider = ({ children }: IProps) => {
 
   return (
     <UserContext.Provider
-      value={{ user, isLoading, authenticateUser, isSignIn, fulfilled }}
+      value={{ user, isLoading, authenticateUser, isSignIn, fulfilled, logOut }}
     >
       {children}
     </UserContext.Provider>

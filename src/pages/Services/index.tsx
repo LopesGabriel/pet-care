@@ -72,7 +72,7 @@ export function Services() {
 
     return unsubscribe
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [user])
 
   const updateField = (
     data: string | string[],

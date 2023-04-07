@@ -13,6 +13,10 @@ export const HeaderContainer = styled.header`
     letter-spacing: 0;
     margin: 0 1rem 0 0;
   }
+
+  button {
+    margin-left: auto;
+  }
 `
 
 export const NavContainer = styled.nav`

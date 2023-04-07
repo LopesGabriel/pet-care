@@ -51,7 +51,7 @@ function SelectedItemPage(props: any) {
 
     return unsubscribe
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [job])
+  }, [job, user])
 
   if (isLoading) return <Loading />
 

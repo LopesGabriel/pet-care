@@ -7,9 +7,9 @@ import { useAuth } from './context/AuthContext'
 import { Loading } from './pages/Loading'
 
 export function Router() {
-  const { fulfilled } = useAuth()
+  const { fulfilled, isLoading } = useAuth()
 
-  if (!fulfilled) {
+  if (!fulfilled || isLoading) {
     return <Loading />
   }
 
