@@ -82,7 +82,7 @@ export function Auth() {
             </div>
             <div className="w-100 d-flex justify-content-end">
               <Button
-                text="Entrar"
+                text={isSignIn ? 'Entrar' : 'Criar conta'}
                 disabled={!email || !password || isLoading}
                 disabledText="Preencha as informações"
                 isLoading={isLoading}

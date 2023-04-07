@@ -81,7 +81,6 @@ const AuthContextProvider = ({ children }: IProps) => {
 
       await updateProfile(user, { displayName: userName })
       await sendEmailVerification(user)
-      alert('Verifique seu email')
     } catch (err) {
       console.error(err)
       if (err instanceof FirebaseError) {
@@ -153,6 +152,7 @@ const AuthContextProvider = ({ children }: IProps) => {
     })
 
     return unsubscribe
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
