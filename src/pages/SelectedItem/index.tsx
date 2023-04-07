@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { onSnapshot, doc } from 'firebase/firestore'
+import { onSnapshot, doc, updateDoc } from 'firebase/firestore'
 
 import { DataWrapper, ServicesList, Title } from './styles'
 import { useAuth } from '../../context/AuthContext'
 import { firestore } from '../../firebase/firestore'
-import { IJob } from '../../entities/IJob'
+import { IJob, ServiceStatus } from '../../entities/IJob'
 import { Loading } from '../Loading'
 import { format } from 'date-fns'
 
@@ -16,6 +16,22 @@ function SelectedItemPage(props: any) {
   const [job, setJob] = useState<IJob>({} as IJob)
   const [isLoading, setLoading] = useState(true)
   const navigate = useNavigate()
+  const jobRef = doc(firestore, 'jobs', itemId!)
+
+  const updateJob = async (status: ServiceStatus) => {
+    try {
+      setLoading(true)
+      await updateDoc(jobRef, {
+        status,
+        updatedAt: new Date().toISOString()
+      })
+    } catch (err) {
+      console.error(err)
+      alert('Não foi possível atualizar o serviço')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (!user) {
@@ -23,7 +39,7 @@ function SelectedItemPage(props: any) {
       return navigate('/auth')
     }
 
-    const unsubscribe = onSnapshot(doc(firestore, 'jobs', itemId!), (doc) => {
+    const unsubscribe = onSnapshot(jobRef, (doc) => {
       const newJob: IJob = {
         id: doc.id,
         ...(doc.data() as any),
@@ -98,13 +114,34 @@ function SelectedItemPage(props: any) {
       </div>
 
       <div className="row justify-content-center">
-        <div className="col-12 col-md-4 col-lg-2">
-          <div className="d-grid">
-            <button className='btn btn-success'>
-              Finalizar
-            </button>
-          </div>
-        </div>
+        {
+          job.status === ServiceStatus.IN_PROGRESS
+            ? <div className="col-12 col-md-4 col-lg-2">
+              <div className="d-grid">
+                <button className='btn btn-danger' onClick={(e) => updateJob(ServiceStatus.CANCELED)}>
+                  Cancelar serviço
+                </button>
+              </div>
+            </div>
+            : null
+        }
+        {
+          job.status === ServiceStatus.IN_PROGRESS
+            ? <div className="col-12 col-md-4 col-lg-2 mt-3 mt-md-0">
+              <div className="d-grid">
+                <button className='btn btn-success' onClick={(e) => updateJob(ServiceStatus.COMPLETED)}>
+                  Finalizar serviço
+                </button>
+              </div>
+            </div>
+            : <div className="col-12 col-md-4 col-lg-2 mt-3 mt-md-0">
+              <div className="d-grid">
+                <button className='btn btn-primary' onClick={(e) => updateJob(ServiceStatus.IN_PROGRESS)}>
+                  Retomar serviço
+                </button>
+              </div>
+            </div>
+        }
       </div>
     </div>
   )
