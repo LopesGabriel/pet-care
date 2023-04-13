@@ -8,6 +8,9 @@ import {
   where,
   getDocs,
   doc,
+  orderBy,
+  limit,
+  updateDoc,
 } from 'firebase/firestore'
 import { Button } from '../../components/Button'
 import { Checkbox } from '../../components/Checkbox'
@@ -17,24 +20,31 @@ import {
   initialState as formInitialState,
 } from '../../entities/INewServiceForm'
 import { IJob, ServiceStatus } from '../../entities/IJob'
-import { Row, TextArea, TextInput, FormContainer } from './styles'
+import { Row, TextArea, FormContainer } from './styles'
 import { IService } from '../../entities/IService'
 import { ITreatment } from '../../entities/ITreatments'
 import { firestore } from '../../firebase/firestore'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { ICustomer } from '../../entities/ICustomer'
+import { TextInput } from '../../components/TextInput'
 
 export function Services() {
   const { user } = useAuth()
   const servicesCollection = collection(firestore, '/services')
   const treatmentsCollection = collection(firestore, '/treatments')
   const jobsCollection = collection(firestore, '/jobs')
+  const customersCollection = collection(firestore, '/customers')
+
   const [formData, setFormData] =
     useState<INewServiceFormInput>(formInitialState)
   const [jobs, setJobs] = useState<IJob[]>([])
   const [services, setServices] = useState<IService[]>([])
   const [treatments, setTreatments] = useState<ITreatment[]>([])
   const navigate = useNavigate()
+  const [customers, setCustomers] = useState<ICustomer[]>([])
+
+  const [tutorTimeout, setTutorTimeout] = useState(0)
 
   useEffect(() => {
     if (!user) {
@@ -59,6 +69,16 @@ export function Services() {
       setTreatments(treatmentsArray)
     })
 
+    const customerQuery = query(customersCollection, orderBy('name'), limit(10))
+    getDocs(customerQuery).then((snapshot) => {
+      const customersArray: ICustomer[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as any),
+      }))
+
+      setCustomers(customersArray)
+    })
+
     const q = query(jobsCollection, where('status', '==', 0))
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const newJobs: IJob[] = querySnapshot.docs.map((doc) => ({
@@ -78,6 +98,38 @@ export function Services() {
     data: string | string[],
     field: keyof INewServiceFormInput,
   ) => {
+    if (field === 'tutor') {
+      if (tutorTimeout) {
+        clearTimeout(tutorTimeout)
+      }
+
+      setTutorTimeout(
+        setTimeout(() => {
+          const strFrontCode = tutor.slice(0, tutor.length - 1)
+          const strEndCode = tutor.slice(tutor.length - 1, tutor.length)
+
+          const startcode = tutor
+          const endcode =
+            strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1)
+          const q = query(
+            customersCollection,
+            where('name', '>=', startcode),
+            where('name', '<', endcode),
+          )
+
+          getDocs(q).then((snapshot) => {
+            const customersArray: ICustomer[] = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...(doc.data() as any),
+            }))
+
+            console.log(customersArray)
+            setCustomers(customersArray)
+          })
+        }, 500) as any,
+      )
+    }
+
     const newForm = { ...formData, [field]: data }
     setFormData(newForm)
   }
@@ -129,6 +181,45 @@ export function Services() {
       tutor: job.tutor,
       updatedAt: job.updatedAt,
     })
+
+    try {
+      const customerQuery = query(
+        customersCollection,
+        where('name', '==', job.tutor.name),
+        where('phoneNumber', '==', job.tutor.phone),
+      )
+      const customerSnapshot = await getDocs(customerQuery)
+      if (!customerSnapshot.empty) {
+        const customerRef = customerSnapshot.docs[0]
+        const customer: ICustomer = {
+          id: customerRef.id,
+          ...(customerRef.data() as any),
+        }
+
+        if (!customer.pets.find((pet) => pet.name === job.pet.name)) {
+          customer.pets.push(job.pet)
+        }
+
+        await updateDoc(customerRef.ref, {
+          numJobs: customer.numJobs + 1,
+          updatedAt: new Date().toISOString(),
+          pets: customer.pets,
+        })
+      } else {
+        const newCustomer = {
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: user?.uid!,
+          name: job.tutor.name,
+          numJobs: 1,
+          pets: [job.pet],
+          phoneNumber: job.tutor.phone,
+        }
+        await setDoc(doc(firestore, 'customers', uuid()), newCustomer)
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -176,6 +267,14 @@ export function Services() {
     }
   }
 
+  const handleTutorAutocompleteClick = (customer: ICustomer) => {
+    setFormData({
+      ...formData,
+      tutor: customer.name,
+      phone: customer.phoneNumber,
+    })
+  }
+
   const {
     breed,
     color,
@@ -196,35 +295,48 @@ export function Services() {
           <FormContainer onSubmit={handleForm}>
             <h3>Adicionar um novo pet</h3>
 
-            <div className="input-wrapper">
-              <TextInput
-                placeholder="Tutor"
-                value={tutor}
-                onChange={(e) => updateField(e.target.value, 'tutor')}
-              />
-              <TextInput
-                placeholder="Telefone"
-                value={phone}
-                onChange={(e) => updateField(e.target.value, 'phone')}
-              />
-              <TextInput
-                placeholder="Nome do pet"
-                value={petName}
-                onChange={(e) => updateField(e.target.value, 'petName')}
-              />
+            <div className="row gy-3">
+              <div className="col-12">
+                <TextInput
+                  placeholder="Tutor"
+                  value={tutor}
+                  onChange={(e) => updateField(e.target.value, 'tutor')}
+                  options={customers.map((contact) => ({
+                    ...contact,
+                    label: contact.name,
+                  }))}
+                  onSelectAutocompleteOption={handleTutorAutocompleteClick}
+                />
+              </div>
+              <div className="col-12">
+                <TextInput
+                  placeholder="Telefone"
+                  value={phone}
+                  onChange={(e) => updateField(e.target.value, 'phone')}
+                />
+              </div>
+              <div className="col-12">
+                <TextInput
+                  placeholder="Nome do pet"
+                  value={petName}
+                  onChange={(e) => updateField(e.target.value, 'petName')}
+                />
+              </div>
 
-              <Row>
+              <div className="col-6">
                 <TextInput
                   placeholder="Raça"
                   value={breed}
                   onChange={(e) => updateField(e.target.value, 'breed')}
                 />
+              </div>
+              <div className="col-6">
                 <TextInput
                   placeholder="Cor"
                   value={color}
                   onChange={(e) => updateField(e.target.value, 'color')}
                 />
-              </Row>
+              </div>
             </div>
 
             <div className="input-wrapper">

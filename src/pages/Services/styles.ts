@@ -25,31 +25,6 @@ export const Row = styled.div<{ gap?: '0.5rem' | '1.5rem' }>`
   }
 `
 
-export const TextInput = styled.input`
-  background-color: ${(props) => props.theme.yellow};
-  border: 2px solid transparent;
-  color: ${(props) => props.theme['black-400']};
-  width: 100%;
-
-  &:focus {
-    border: 2px solid ${(props) => props.theme['black-600']};
-  }
-
-  ::placeholder {
-    /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${(props) => props.theme['black-400']};
-    opacity: 0.8;
-  }
-  :-ms-input-placeholder {
-    /* Internet Explorer 10-11 */
-    color: ${(props) => props.theme['black-400']};
-  }
-  ::-ms-input-placeholder {
-    /* Microsoft Edge */
-    color: ${(props) => props.theme['black-400']};
-  }
-`
-
 export const TextArea = styled.textarea`
   background-color: ${(props) => props.theme.yellow};
   border: 2px solid transparent;

@@ -3,20 +3,18 @@ import styled from 'styled-components'
 export const HeaderContainer = styled.header`
   background-color: ${(props) => props.theme.yellow};
   color: ${(props) => props.theme['black-400']};
-  display: flex;
-  padding: 0.4rem 2rem;
-
-  h2 {
-    color: ${(props) => props.theme['black-400']};
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: 0;
-    margin: 0 1rem 0 0;
-  }
+  padding: 0;
 
   button {
     margin-left: auto;
   }
+`
+
+export const NavbarHeading = styled.span`
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: 'Roboto Mono' monospace;
+  color: ${(props) => props.theme['black-600']};
 `
 
 export const NavContainer = styled.nav`
@@ -24,6 +22,12 @@ export const NavContainer = styled.nav`
   align-items: center;
   list-style: none;
   justify-content: flex-start;
+
+  margin-left: 1rem;
+
+  @media screen and (min-width: 768px) {
+    margin-left: 2rem;
+  }
 
   a {
     align-items: center;
@@ -35,7 +39,7 @@ export const NavContainer = styled.nav`
     height: 100%;
     justify-content: center;
     margin: 0;
-    padding: 0 1rem;
+    padding: 1rem;
     transition: all 0.4s ease;
     text-decoration: none;
     opacity: 0.8;

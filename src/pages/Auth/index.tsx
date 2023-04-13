@@ -1,7 +1,7 @@
 import { FormEventHandler, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/Button'
-import { TextInput } from '../Services/styles'
+import { TextInput } from '../../components/TextInput'
 import { AuthWrapper, AuthForm } from './styles'
 import { useAuth } from '../../context/AuthContext'
 
