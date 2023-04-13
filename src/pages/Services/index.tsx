@@ -29,6 +29,12 @@ import { useAuth } from '../../context/AuthContext'
 import { ICustomer } from '../../entities/ICustomer'
 import { TextInput } from '../../components/TextInput'
 
+interface IPet {
+  name: string
+  breed?: string
+  color?: string
+}
+
 export function Services() {
   const { user } = useAuth()
   const servicesCollection = collection(firestore, '/services')
@@ -45,6 +51,7 @@ export function Services() {
   const [customers, setCustomers] = useState<ICustomer[]>([])
 
   const [tutorTimeout, setTutorTimeout] = useState(0)
+  const [petsSuggestion, setPetsSuggestion] = useState<IPet[]>([])
 
   useEffect(() => {
     if (!user) {
@@ -273,6 +280,16 @@ export function Services() {
       tutor: customer.name,
       phone: customer.phoneNumber,
     })
+    setPetsSuggestion(customer.pets)
+  }
+
+  const handlePetSuggestionClick = (pet: IPet) => {
+    setFormData({
+      ...formData,
+      petName: pet.name,
+      breed: pet.breed ?? '',
+      color: pet.color ?? '',
+    })
   }
 
   const {
@@ -320,6 +337,12 @@ export function Services() {
                   placeholder="Nome do pet"
                   value={petName}
                   onChange={(e) => updateField(e.target.value, 'petName')}
+                  options={petsSuggestion.map((pet) => ({
+                    ...pet,
+                    id: pet.name.trim(),
+                    label: pet.name,
+                  }))}
+                  onSelectAutocompleteOption={handlePetSuggestionClick}
                 />
               </div>
 
