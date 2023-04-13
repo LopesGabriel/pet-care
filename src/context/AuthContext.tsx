@@ -115,7 +115,9 @@ const AuthContextProvider = ({ children }: IProps) => {
       } catch (err: any) {
         if (err instanceof FirebaseError) {
           if (err.code === 'auth/user-not-found') {
-            setSignIn(false)
+            // TODO: If want to enable registration set this to false
+            setSignIn(true)
+            alert('Usuário não encontrado!')
           }
         }
       } finally {
