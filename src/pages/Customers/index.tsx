@@ -34,6 +34,7 @@ export function Customers() {
     })
 
     return unsubscribe
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customers, isLoading])
 
   if (isLoading) return <Loading />
