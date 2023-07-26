@@ -35,13 +35,13 @@ interface IPet {
   color?: string
 }
 
+const servicesCollection = collection(firestore, '/services')
+const treatmentsCollection = collection(firestore, '/treatments')
+const jobsCollection = collection(firestore, '/jobs')
+const customersCollection = collection(firestore, '/customers')
+
 export function Services() {
   const { user } = useAuth()
-  const servicesCollection = collection(firestore, '/services')
-  const treatmentsCollection = collection(firestore, '/treatments')
-  const jobsCollection = collection(firestore, '/jobs')
-  const customersCollection = collection(firestore, '/customers')
-
   const [formData, setFormData] =
     useState<INewServiceFormInput>(formInitialState)
   const [jobs, setJobs] = useState<IJob[]>([])
@@ -49,7 +49,6 @@ export function Services() {
   const [treatments, setTreatments] = useState<ITreatment[]>([])
   const navigate = useNavigate()
   const [customers, setCustomers] = useState<ICustomer[]>([])
-
   const [tutorTimeout, setTutorTimeout] = useState(0)
   const [petsSuggestion, setPetsSuggestion] = useState<IPet[]>([])
 
@@ -76,7 +75,11 @@ export function Services() {
       setTreatments(treatmentsArray)
     })
 
-    const customerQuery = query(customersCollection, orderBy('name'), limit(10))
+    const customerQuery = query(
+      customersCollection,
+      orderBy('numJobs', 'desc'),
+      limit(5),
+    )
     getDocs(customerQuery).then((snapshot) => {
       const customersArray: ICustomer[] = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -93,13 +96,12 @@ export function Services() {
         ...(doc.data() as any),
       }))
 
-      console.log('Jobs', newJobs)
       setJobs(newJobs)
     })
 
     return unsubscribe
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+  }, [])
 
   const updateField = (
     data: string | string[],
@@ -122,18 +124,21 @@ export function Services() {
             customersCollection,
             where('name', '>=', startcode),
             where('name', '<', endcode),
+            limit(5),
           )
 
-          getDocs(q).then((snapshot) => {
-            const customersArray: ICustomer[] = snapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...(doc.data() as any),
-            }))
+          getDocs(q)
+            .then((snapshot) => {
+              const customersArray: ICustomer[] = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...(doc.data() as any),
+              }))
 
-            console.log(customersArray)
-            setCustomers(customersArray)
-          })
-        }, 500) as any,
+              console.log(customersArray)
+              setCustomers(customersArray)
+            })
+            .catch((err) => console.error(err))
+        }, 2000) as any,
       )
     }
 
