@@ -53,11 +53,13 @@ export function Services() {
   const [petsSuggestion, setPetsSuggestion] = useState<IPet[]>([])
 
   useEffect(() => {
+    console.log('Running useEffect')
     if (!user) {
       return navigate('/auth')
     }
 
     getDocs(servicesCollection).then((snapshot) => {
+      console.log('Available services received, size:', snapshot.size)
       const servicesArray: IService[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         name: doc.data().name,
@@ -67,6 +69,7 @@ export function Services() {
     })
 
     getDocs(treatmentsCollection).then((snapshot) => {
+      console.log('Available treatments received, size:', snapshot.size)
       const treatmentsArray: ITreatment[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         name: doc.data().name,
@@ -81,6 +84,7 @@ export function Services() {
       limit(5),
     )
     getDocs(customerQuery).then((snapshot) => {
+      console.log('Initial customers received, size:', snapshot.size)
       const customersArray: ICustomer[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...(doc.data() as any),
@@ -91,10 +95,35 @@ export function Services() {
 
     const q = query(jobsCollection, where('status', '==', 0))
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const newJobs: IJob[] = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as any),
-      }))
+      console.log('Jobs subscription result:', querySnapshot.size)
+      const added: IJob[] = []
+      const removed: string[] = []
+
+      querySnapshot.docChanges().forEach((event) => {
+        if (event.type === 'added') {
+          added.push({
+            id: event.doc.id,
+            ...(event.doc.data() as any),
+          })
+          return
+        }
+
+        if (event.type === 'removed') {
+          removed.push(event.doc.id)
+          return
+        }
+
+        alert('Unhandled event received!')
+        console.log(event.type, event.doc.id)
+      })
+
+      let newJobs = [...jobs]
+      if (added) {
+        newJobs.push(...added)
+      }
+      if (removed) {
+        newJobs = newJobs.filter((job) => !removed.includes(job.id))
+      }
 
       setJobs(newJobs)
     })
@@ -129,6 +158,10 @@ export function Services() {
 
           getDocs(q)
             .then((snapshot) => {
+              console.log(
+                'Customers auto-completion result size:',
+                snapshot.size,
+              )
               const customersArray: ICustomer[] = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...(doc.data() as any),
